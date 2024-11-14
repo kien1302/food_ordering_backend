@@ -1,0 +1,46 @@
+version: '3.0'
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    # volumes:
+    #         - ./data/mysql:/var/lib/mysql
+    # user: '1000:1000'
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=food_delivery
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    restart: always
+    healthcheck:
+      test: [ 'CMD', 'mysqladmin', 'ping' ]
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+      interval: 30s
+    networks:
+      - db-network
+  api:
+    build:
+      context: .
+    container_name: api
+    depends_on:
+      - mysql
+    user: 1000:1000
+    ports:
+      - $PORT:$PORT
+    networks:
+      - db-network
+    environment:
+      - DATABASE_NAME=food_delivery
+      - HOST=mysql
+      - DB_USER=user
+      - PASSWORD=password
+      - PORT=5000
+      - SERVER_HOST=0.0.0.0
+      - ALLOW_ORIGINS=["https://food-delivery-frontend-five.vercel.app/"]
+networks:
+  db-network:
+    driver: bridge

@@ -1,0 +1,9 @@
+.env
+node_modules
+package-lock.json
+yarn.lock
+package.json
+env.rar
+database-backup/FoodDelivery(23-6-2023).rar
+*.rar
+.vscode/settings.json
