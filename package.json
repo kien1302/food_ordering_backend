@@ -21,12 +21,12 @@
     "joi": "^17.7.0",
     "moment": "^2.29.4",
     "mysql": "^2.18.1",
-    "mysql2": "^2.3.3",
     "sequelize": "^6.28.0"
   },
   "devDependencies": {
     "eslint": "^8.24.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "mysql2": "^2.3.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
