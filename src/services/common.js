@@ -9,8 +9,9 @@ const db_config = {
   database: process.env.DATABASE_NAME,
 };
 
-const sequelize = new Sequelize(db_config.database, db_config.user, db_config.password, db_config.port, {
+const sequelize = new Sequelize(db_config.database, db_config.user, db_config.password, {
   host: db_config.host,
+  database: "food_delivery",
   port: db_config.port,
   dialect: "mysql",
   define: {
