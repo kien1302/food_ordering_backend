@@ -3,13 +3,15 @@ const { Sequelize } = require("sequelize");
 
 const db_config = {
   host: process.env.HOST,
+  port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.PASSWORD,
   database: process.env.DATABASE_NAME,
 };
 
-const sequelize = new Sequelize(db_config.database, db_config.user, db_config.password, {
+const sequelize = new Sequelize(db_config.database, db_config.user, db_config.password, db_config.port, {
   host: db_config.host,
+  port: db_config.port,
   dialect: "mysql",
   define: {
     freezeTableName: true,
