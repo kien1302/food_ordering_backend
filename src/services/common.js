@@ -17,6 +17,7 @@ const sequelize = new Sequelize(db_config.database, db_config.user, db_config.pa
   define: {
     freezeTableName: true,
   },
+  dialectModule: require('mysql2'),
   dialectOptions: {
     ssl: {
       require: true,
