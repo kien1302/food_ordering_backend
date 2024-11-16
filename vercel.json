@@ -11,8 +11,11 @@
           },
           "*.js": {
           "maxDuration": 60
+          },
+          "app/**/*.js": {
+          "maxDuration": 60
+          }
         }
-      }
       }
     }
     ],
