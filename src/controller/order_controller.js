@@ -1,5 +1,5 @@
 const { insertOrder, getUserOrderWithCommentList, updateStatus, getTotalOrdersByStatus, getRangeOrdersByStatus, getOrderByAccount, getOrderById, getTotalOrdersByStatusOfUser, getOrderProgress, getOrderProductCount, increaseOrderProgress, getRangeOrdersByStatusOfUser, getOrderReceivedStateByOrderId } = require("../models/order");
-const { insertOrderDetail, getOrderDetailById, getTotalPriceByOrderId, checkproceedOrderDetail, proceedOrderDetail, orderSeenCheckWithStore, getUnseenOrderFromStore } = require("../models/order_detail");
+const { insertOrderDetail, getOrderDetailById, getTotalPriceByOrderId, checkproceedOrderDetail, proceedOrderDetail, orderSeenCheckWithStore, getUnseenOrderFromStore, getAllOrderProductOfStore } = require("../models/order_detail");
 //const crypto = require("crypto");
 const { getAccountByIdAndRole } = require("../models/account");
 const { pagination, checkNextAndPreviousPage } = require("../services/common");
@@ -128,7 +128,7 @@ module.exports = {
       }
 
       // insert order into db
-      const order = await insertOrder(order_id, account_id, address, ship_fee, payment_method, product_count, created_date);
+      const order = await insertOrder(order_id, account_id, address, ship_fee,created_date, payment_method, product_count, created_date);
       if (!order) {
         res.status(500).json({ error: "Create order failed!" });
         return;
@@ -294,5 +294,18 @@ module.exports = {
     }
   },
 
-  test: async function (req, res) {},
+  test: async function (req, res) {
+    try {
+      const store_id = req.query.store_id;
+
+      const data = await getAllOrderProductOfStore(store_id);
+ 
+      if (data) {
+        res.status(200).json(data);
+      } else res.status(404).json({error: "can not get order product"});
+    } catch (e) {
+      console.log("check e: ", e);
+      res.status(500).send(err);
+    }
+  },
 };

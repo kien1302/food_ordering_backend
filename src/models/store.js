@@ -50,6 +50,7 @@ const Store = sequelize.define(
 );
 
 async function insertStore(id, owner_id, name, address, description, image, type_id, created_date) {
+  console.log("check store import: ", id, owner_id, name, address, description, image, type_id, created_date)
   try {
     await Store.create({
       id: id,

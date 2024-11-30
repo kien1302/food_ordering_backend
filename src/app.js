@@ -10,7 +10,7 @@ const session = require("cookie-session");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 3307;
+const PORT = process.env.PORT || 5000;
 const HOST = process.env.SERVER_HOST || "127.0.0.1";
 // Specific domain
 const allowedOrigins = JSON.parse(process.env.ALLOW_ORIGINS);

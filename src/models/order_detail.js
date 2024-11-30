@@ -1,5 +1,5 @@
 const { sequelize } = require("../services/common");
-const { DataTypes, QueryTypes } = require("sequelize");
+const { DataTypes, QueryTypes, where } = require("sequelize");
 
 const orderDetail = sequelize.define(
   "order_detail",
@@ -91,6 +91,30 @@ async function getOrderDetailById(order_id) {
   return await sequelize.query("select product_id, " + "(select name from menu m where od.product_id = m.id) 'product_name', store_id, " + "(select name from store s where od.store_id = s.id) 'store_name', quantity, price from order_detail od where od.order_id = '" + order_id + "'", {
     type: QueryTypes.SELECT,
   });
+}
+
+async function getAllOrderProductOfStore(store_id) {
+  //hiển thị danh sách order của 1 store 
+  const orderDetailProduct = await orderDetail.findAll({
+    where: {
+      store_id: store_id,
+    }
+  })
+
+  let total = 0;
+  const groupOrderbyOrderId = orderDetailProduct.reduce((result, item) => {
+    // If the order_id key doesn't exist in the result, create it
+    if (!result[item.order_id]) {
+      result[item.order_id] = [];
+    }
+    total += (item.price * item.quantity)
+    result[item.order_id].push(item)
+    return result;
+  }, {})
+  return {
+    ...groupOrderbyOrderId,
+    total
+  };
 }
 
 async function getTotalPriceByOrderId(order_id) {
@@ -187,4 +211,5 @@ module.exports = {
   getOrderDetailById,
   getTotalPriceByOrderId,
   getProductListWithOrderId,
+  getAllOrderProductOfStore
 };

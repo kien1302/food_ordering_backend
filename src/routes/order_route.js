@@ -13,11 +13,11 @@ router.route("/proceed").post(middleware(schemas.proceedOrderWithStore, PROPERTY
 
 router.route("/status-change").post(middleware(schemas.changeOrderStatus, PROPERTY_TYPE.body), order.changeOrderStatus);
 router.route("/get-store-orders").post(middleware(schemas.getStoreOrders, PROPERTY_TYPE.query), order.getStoreOrders);
-router.route("/get-order/:order_id").post(middleware(schemas.OrderId, PROPERTY_TYPE.params), order.getOrderDetail);
+router.route("/get-order/:order_id").get(middleware(schemas.OrderId, PROPERTY_TYPE.params), order.getOrderDetail);
 router.post("/orders-seen-status-set", order.orderSeenStatusSet);
 router.post("/get-unseen-orders", order.getUnseenStatusOrder);
 
 //test
-router.get("/test", order.test);
+router.route("/test").get(middleware(schemas.StoreProductOrdered, PROPERTY_TYPE.query), order.test);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { insertComment, updateComment, getCommetByIdAndAccount, checkExistComment } = require("../models/comment");
+const { insertComment, updateComment, getCommetByIdAndAccount, checkExistComment, getCommentsListFromStore, getAllComments } = require("../models/comment");
 const { getOrderByAccount } = require("../models/order");
 
 module.exports = {
@@ -65,4 +65,31 @@ module.exports = {
       res.status(500).send(err);
     }
   },
+
+  getAllCommentFromStore: async function (req, res) {
+    try {
+      const store_id = req.query.store_id;
+
+      const result = await getCommentsListFromStore(store_id);
+
+      if (result) {
+        res.status(200).json({ message: "List of Customers' Comments", data: result });
+      }
+    } catch (e) {
+      res.status(500).send(e);
+    }
+  },
+
+  getAllComments: async function (req, res) {
+    try {
+      const result = await getAllComments();
+
+      if (result) {
+        res.status(200).json({ message: "Fetch Successfully!" , data: result});
+      }
+    } catch (e) {
+      console.error(e)
+      res.status(500).send(e)
+    }
+  }
 };

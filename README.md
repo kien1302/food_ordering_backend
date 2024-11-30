@@ -23,7 +23,7 @@ Development environment: NodeJs, MySQL
 - Run
 
 ```
-$ git clone git@github.com:baonguyen120301/Food_delivery_backend.git
+$ git clone git@github.com:huynhgiakien2001/Food_delivery_backend.git
 $ cd Food_delivery_backend
 $ yarn
 

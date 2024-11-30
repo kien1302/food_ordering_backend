@@ -18,7 +18,7 @@ const productypename = Joi.string()
 const address = name;
 const description = name;
 
-const role_id = Joi.string().valid("CUS", "SEL").required();
+const role_id = Joi.string().valid("CUS", "SEL", "AD").required();
 const id = Joi.string().length(10).required();
 const comment_id = Joi.number().min(0).required();
 const store_type = Joi.string().required();
@@ -47,7 +47,8 @@ const ship_fee = Joi.string().max(25).required();
 
 const payment_method = Joi.string().alphanum().required();
 const created_date = Joi.string().required();
-//const timestamp = Joi.string().required();
+const updated_date = Joi.string().required();
+const stock = Joi.number().min(1).required();
 const out_of_stock = Joi.number().valid(0, 1).required();
 
 const del_flag = Joi.number().valid(0, 1).required();
@@ -99,6 +100,10 @@ const schemas = {
     star: star,
   }),
 
+  getComments: Joi.object().keys({
+    store_id: store_id,
+  }),
+
   createProduct: Joi.object().keys({
     store_id: store_id,
     name: name,
@@ -106,6 +111,9 @@ const schemas = {
     type_id: product_type_id,
     image: image,
     price: price,
+    stock: stock,
+    created_date: created_date,
+    updated_date: updated_date,
   }),
 
   createProductType: Joi.object().keys({
@@ -174,6 +182,7 @@ const schemas = {
     image: image,
     type_id: store_type,
     created_date: created_date,
+    owner_id: id,
   }),
 
   editStore: Joi.object().keys({
@@ -218,6 +227,9 @@ const schemas = {
   OrderId: Joi.object().keys({
     order_id: order_id,
   }),
+  StoreProductOrdered: Joi.object().keys({
+    store_id: store_id,
+  })
 };
 
 module.exports = schemas;

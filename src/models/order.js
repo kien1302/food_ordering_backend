@@ -56,13 +56,14 @@ const Order = sequelize.define(
   }
 );
 
-async function insertOrder(order_id, account_id, address, ship_fee, payment_method, product_count, created_date) {
+async function insertOrder(order_id, account_id, address, ship_fee,timestamp, payment_method, product_count, created_date) {
   try {
     await Order.create({
       id: order_id,
       account_id: account_id,
       address: address,
       ship_fee: ship_fee,
+      timestamp: timestamp,
       payment_method: payment_method,
       product_count: product_count,
       status: "PENDING",
@@ -99,10 +100,10 @@ async function getOrderByAccount(account_id, order_id) {
 async function getTotalOrdersByStatusOfUser(user_id, status_id) {
   const total = await sequelize.query(
     "select count(id) as 'total_count' from food_delivery.order where account_id = '" +
-      user_id +
-      "' and status = '" +
-      status_id +
-      "'",
+    user_id +
+    "' and status = '" +
+    status_id +
+    "'",
     {
       type: QueryTypes.SELECT,
     }
@@ -149,10 +150,10 @@ async function getOrderProductCount(order_id) {
 async function getTotalOrdersByStatus(store_id, status_id) {
   const total = await sequelize.query(
     "select count(o.id) as 'total_orders' from food_delivery.order o inner join order_detail od on o.id = od.order_id where store_id = '" +
-      store_id +
-      "' and status = '" +
-      status_id +
-      "'",
+    store_id +
+    "' and status = '" +
+    status_id +
+    "'",
     {
       type: QueryTypes.SELECT,
     }
@@ -163,15 +164,15 @@ async function getTotalOrdersByStatus(store_id, status_id) {
 async function getRangeOrdersByStatus(start, size, store_id, status_id) {
   const data = await sequelize.query(
     "SELECT o.id, (select email from account a where a.id = o.account_id) 'email', created_date, payment_method, product_id, " +
-      "(select name from menu m where m.id = product_id) 'product', " +
-      "(select name from status s where s.id = o.status) 'status', od.quantity,  progress, proceed, is_seen " +
-      "FROM food_delivery.order o inner join order_detail od on o.id = od.order_id " +
-      "where store_id = '" +
-      store_id +
-      "' order by created_date DESC limit " +
-      size +
-      " offset " +
-      start,
+    "(select name from menu m where m.id = product_id) 'product', " +
+    "(select name from status s where s.id = o.status) 'status', od.quantity,  progress, proceed, is_seen " +
+    "FROM food_delivery.order o inner join order_detail od on o.id = od.order_id " +
+    "where store_id = '" +
+    store_id +
+    "' order by created_date DESC limit " +
+    size +
+    " offset " +
+    start,
     {
       type: QueryTypes.SELECT,
     }
@@ -217,11 +218,11 @@ async function getUserOrderWithCommentList(account_id, order_id) {
   try {
     const data = await sequelize.query(
       "select store_id, (select name from store s where c.store_id = s.id) 'store_name',comment, star, created_date, updated_date from food_delivery.comment c where order_id='" +
-        order_id +
-        "'" +
-        "and account_id = '" +
-        account_id +
-        "'",
+      order_id +
+      "'" +
+      "and account_id = '" +
+      account_id +
+      "'",
       {
         type: QueryTypes.SELECT,
       }
@@ -257,13 +258,13 @@ async function calculateProfitWithYear(store_id, year) {
   try {
     const data = await sequelize.query(
       "SELECT UNIX_TIMESTAMP(STR_TO_DATE(ord.created_date, '%Y-%m-%dT'))*1000 'otimestamp'," +
-        " SUM(price + ship_fee * quantity ) 'total' FROM food_delivery.order ord " +
-        "inner join order_detail od on ord.id = od.order_id " +
-        "where store_id = '" +
-        store_id +
-        "' and ord.created_date like '" +
-        year +
-        "-%' group by otimestamp order by otimestamp asc",
+      " SUM(price + ship_fee * quantity ) 'total' FROM food_delivery.order ord " +
+      "inner join order_detail od on ord.id = od.order_id " +
+      "where store_id = '" +
+      store_id +
+      "' and ord.created_date like '" +
+      year +
+      "-%' group by otimestamp order by otimestamp asc",
       {
         type: QueryTypes.SELECT,
       }
@@ -278,10 +279,30 @@ async function calculateProfitWithYear(store_id, year) {
 async function getTotalProfitAndQuantityByStatus(store_id) {
   try {
     const data = await sequelize.query(
-      "Select SUM(od.quantity * od.price)'tamount', count(quantity)'tquantity' ,o.status, (select color from food_delivery.status st where st.id = o.status) 'color'" +
-        "from food_delivery.order o inner join order_detail od on o.id = od.order_id where store_id = '" +
-        store_id +
-        "' group by status",
+      // "Select SUM(od.quantity * od.price)'tamount', count(quantity)'tquantity' ,o.status, (select color from food_delivery.status st where st.id = o.status) 'color'" +
+      // "from food_delivery.order o inner join order_detail od on o.id = od.order_id where store_id = '" +
+      // store_id +
+      // "' group by status",
+
+      `
+  SELECT 
+    SUM(od.quantity * od.price) AS tamount,
+    COUNT(od.quantity) AS tquantity,
+    o.status,
+    st.color
+  FROM 
+    food_delivery.order o
+  INNER JOIN 
+    food_delivery.order_detail od 
+    ON o.id = od.order_id
+  INNER JOIN
+    food_delivery.status st
+    ON st.id = o.status
+  WHERE 
+    o.store_id = ${store_id}
+  GROUP BY 
+    o.status, st.color
+  `,
       {
         type: QueryTypes.SELECT,
       }
@@ -297,9 +318,9 @@ async function getOrderReceivedStateByOrderId(order_id) {
   try {
     const data = await sequelize.query(
       "SELECT (select name from menu m where m.id = od.product_id) 'name', quantity, " +
-        "(select name from store s where s.id = od.store_id) 'store', proceed FROM food_delivery.order_detail od where order_id = '" +
-        order_id +
-        "'",
+      "(select name from store s where s.id = od.store_id) 'store', proceed FROM food_delivery.order_detail od where order_id = '" +
+      order_id +
+      "'",
       {
         type: QueryTypes.SELECT,
       }

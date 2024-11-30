@@ -7,7 +7,6 @@ const {
 } = require("../models/account");
 const bcrypt = require("bcryptjs");
 const { getUserStore } = require("../models/store");
-const { DATE } = require("sequelize");
 
 module.exports = {
   logoutAccount: async function (req, res) {

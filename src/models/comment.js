@@ -101,17 +101,61 @@ async function updateComment(store_id, order_id, account_id, comment, star, upda
   }
 }
 
-async function getCommentsListFromStore(store_id) {
+async function getAllComments() {
   try {
     const data = await sequelize.query(
-      "SELECT id , order_id, (select name from account a where a.id = c.account_id) 'name' " +
-        ", comment, star, created_date, updated_date FROM food_delivery.comment c where c.store_id = '" +
-        store_id +
-        "'",
+      `
+      SELECT
+          c.id,
+          c.order_id,
+          (SELECT name FROM account a WHERE a.id = c.account_id) AS 'name',
+          c.comment, 
+          c.star,
+          c.created_date,
+          c.updated_date,
+          (SELECT name FROM menu m WHERE m.id = od.product_id) AS 'product_name',
+          od.quantity,
+          od.store_id AS order_store_id,
+          od.price
+        FROM food_delivery.comment c
+        JOIN food_delivery.order_detail od ON c.order_id = od.order_id
+      `,
       {
         type: QueryTypes.SELECT,
       }
-    );
+    )
+    return data;
+  } catch (e) {
+    console.err(e)
+    return null;
+  }
+}
+
+async function getCommentsListFromStore(store_id) {
+  try {
+    const data = await sequelize.query(
+      `
+        SELECT
+          c.id,
+          c.order_id,
+          (SELECT name FROM account a WHERE a.id = c.account_id) AS 'name',
+          c.comment, 
+          c.star,
+          c.created_date,
+          c.updated_date,
+          (SELECT name FROM menu m WHERE m.id = od.product_id) AS 'product_name',
+          od.quantity,
+          od.store_id AS order_store_id,
+          od.price
+        FROM food_delivery.comment c
+        JOIN food_delivery.order_detail od ON c.order_id = od.order_id
+        WHERE od.store_id = :store_id
+      `,
+      {
+        replacements: { store_id },
+        type: QueryTypes.SELECT,
+      }
+    )
     return data;
   } catch (err) {
     console.log(err);
@@ -149,7 +193,7 @@ async function checkExistComment(account_id, order_id, store_id) {
     });
     if (data) return true;
     else return false;
-  } catch (error) {}
+  } catch (error) { }
 }
 
 module.exports = {
@@ -159,4 +203,5 @@ module.exports = {
   getCommentsListFromStore,
   getCommetByIdAndAccount,
   checkExistComment,
+  getAllComments,
 };

@@ -1,14 +1,14 @@
 {
-  "name": "Food_ordering_backend",
+  "name": "food_delivery_backend",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git+ssh://git@github.com/huynhgiakien2001/Food_ordering_backend.git",
-  "author": "huynhgiakien2001 <huynhgiakien2001@gmail.com>",
+  "repository": "git+ssh://git@github.com/baonguyen120301/Food_delivery_backend.git",
+  "author": "baonguyen120301 <baonguyen120301@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/huynhgiakien2001/Food_ordering_backend/issues"
+    "url": "https://github.com/baonguyen120301/Food_delivery_backend/issues"
   },
-  "homepage": "https://github.com/huynhgiakien2001/Food_ordering_backend#readme",
+  "homepage": "https://github.com/baonguyen120301/Food_delivery_backend#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
@@ -21,12 +21,12 @@
     "joi": "^17.7.0",
     "moment": "^2.29.4",
     "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
     "sequelize": "^6.28.0"
   },
   "devDependencies": {
     "eslint": "^8.24.0",
-    "nodemon": "^2.0.20",
-    "mysql2": "^2.3.3"
+    "nodemon": "^2.0.20"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
