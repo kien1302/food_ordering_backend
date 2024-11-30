@@ -2,7 +2,7 @@ require("dotenv").config();
 const { Sequelize } = require("sequelize");
 
 const db_config = {
-  host: process.env.DB_HOST,
+  host: process.env.HOST,
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.PASSWORD,
@@ -11,11 +11,13 @@ const db_config = {
 
 const sequelize = new Sequelize(db_config.database, db_config.user, db_config.password, {
   host: db_config.host,
+  database: "food_delivery",
   port: db_config.port,
   dialect: "mysql",
   define: {
     freezeTableName: true,
   },
+  dialectModule: require('mysql2'),
   dialectOptions: {
     ssl: {
       require: true,
