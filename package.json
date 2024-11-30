@@ -1,14 +1,14 @@
 {
-  "name": "food_delivery_backend",
+  "name": "food_ordering_backend",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git+ssh://git@github.com/baonguyen120301/Food_delivery_backend.git",
-  "author": "baonguyen120301 <baonguyen120301@gmail.com>",
+  "repository": "git+ssh://git@github.com/kien1302/food_ordering_backend.git",
+  "author": "kien1302 <huynhgiakien2001@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/baonguyen120301/Food_delivery_backend/issues"
+    "url": "https://github.com/kien1302/food_ordering_backend/issues"
   },
-  "homepage": "https://github.com/baonguyen120301/Food_delivery_backend#readme",
+  "homepage": "https://github.com/kien1302/food_ordering_backend#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
