@@ -66,7 +66,7 @@ async function insertOrder(order_id, account_id, address, ship_fee,timestamp, pa
       timestamp: timestamp,
       payment_method: payment_method,
       product_count: product_count,
-      status: "PENDING",
+      status: "NRY",
       created_date: created_date,
       progress: 0,
     });

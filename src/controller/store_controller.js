@@ -110,9 +110,15 @@ module.exports = {
         return;
       } else {
         let comments = await getCommentsListFromStore(store_id);
-        const order_id = comments[0].order_id;
-        const productlist = await getProductListWithOrderId(order_id, store_id);
-        comments[0]["products"] = productlist;
+        comments = await Promise.all(
+          comments.map(async (e) => {
+            let order_id = e.order_id;
+            let productlist = await getProductListWithOrderId(order_id, store_id);
+            return { ...e, products: productlist }; // Return updated comment
+          })
+        );
+        console.log("teas:", comments)
+        // comments[0]["products"] = productlist;
         res.status(200).json(comments);
       }
     } catch (err) {

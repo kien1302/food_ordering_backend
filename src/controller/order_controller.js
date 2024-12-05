@@ -1,5 +1,5 @@
 const { insertOrder, getUserOrderWithCommentList, updateStatus, getTotalOrdersByStatus, getRangeOrdersByStatus, getOrderByAccount, getOrderById, getTotalOrdersByStatusOfUser, getOrderProgress, getOrderProductCount, increaseOrderProgress, getRangeOrdersByStatusOfUser, getOrderReceivedStateByOrderId } = require("../models/order");
-const { insertOrderDetail, getOrderDetailById, getTotalPriceByOrderId, checkproceedOrderDetail, proceedOrderDetail, orderSeenCheckWithStore, getUnseenOrderFromStore, getAllOrderProductOfStore } = require("../models/order_detail");
+const { insertOrderDetail, getOrderDetailById, getTotalPriceByOrderId, checkproceedOrderDetail, proceedOrderDetail, orderSeenCheckWithStore, getUnseenOrderFromStore, getAllOrderProductOfStore, getOrderProductsStore } = require("../models/order_detail");
 //const crypto = require("crypto");
 const { getAccountByIdAndRole } = require("../models/account");
 const { pagination, checkNextAndPreviousPage } = require("../services/common");
@@ -48,7 +48,7 @@ module.exports = {
         // check if this order is accepted or not
         if (checkCus.length > 0) {
           const status = checkCus[0].status;
-          if (status !== "PENDING") {
+          if (status == "RCD") {
             res.status(500).json({
               error: "This order cannot be canceled because the store owner has already accepted it",
             });
@@ -94,14 +94,10 @@ module.exports = {
       const productcount = await getOrderProductCount(order_id);
 
       //check order's current total accepted (progress) with condition amount (productcount)
-      if (progress == 0) {
-        await updateStatus(order_id, "PENDING");
+      if (progress == 0 || progress < productcount) {
+        await updateStatus(order_id, "RCD");
       } else {
-        if (progress == productcount) {
-          await updateStatus(order_id, "SHIPPING");
-        } else {
-          await updateStatus(order_id, "CONFIRMED");
-        }
+          await updateStatus(order_id, "SHP");
       }
     } catch (err) {
       res.status(500).send(err);
@@ -308,4 +304,18 @@ module.exports = {
       res.status(500).send(err);
     }
   },
+
+  getOrderAllProductStore: async function (req, res) {
+    try {
+      const order_id = req.body.order_id;
+      const result = await getOrderProductsStore(order_id);
+
+
+        res.status(200).json({ message: "Fetch Successfully!" , data: result});
+      
+    } catch (e) {
+      console.error(e)
+      res.status(500).send(e)
+    }
+  }
 };

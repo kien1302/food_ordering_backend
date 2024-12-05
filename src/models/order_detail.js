@@ -199,6 +199,24 @@ async function getUnseenOrderFromStore(store_id) {
 //     return false;
 //   }
 // }
+async function getOrderProductsStore(order_id)
+{
+  try {
+    const data = await sequelize.query(`select t.order_id, account_id, t.store_id, t.product_id, star, t2.created_date, t3.name 'store_name', comment, t4.name 'product_name'
+from food_delivery.order_detail t left join food_delivery.comment t2
+on t.store_id = t2.store_id and t.order_id = t2.order_id
+join food_delivery.store t3 on t.store_id = t3.id
+join food_delivery.menu t4 on t.product_id = t4.id
+where t.order_id = '` + order_id + "'", {
+      type: QueryTypes.SELECT,
+    });
+    return data;
+  } catch (error) {
+    return null;
+  }
+}
+
+
 
 module.exports = {
   orderDetail,
@@ -211,5 +229,6 @@ module.exports = {
   getOrderDetailById,
   getTotalPriceByOrderId,
   getProductListWithOrderId,
-  getAllOrderProductOfStore
+  getAllOrderProductOfStore,
+  getOrderProductsStore
 };
