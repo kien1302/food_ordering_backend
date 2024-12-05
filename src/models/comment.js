@@ -108,6 +108,7 @@ async function getAllComments() {
       SELECT
           c.id,
           c.order_id,
+          c.account_id,
           (SELECT name FROM account a WHERE a.id = c.account_id) AS 'name',
           c.comment, 
           c.star,
@@ -138,6 +139,7 @@ async function getCommentsListFromStore(store_id) {
         SELECT
           c.id,
           c.order_id,
+          c.account_id,
           (SELECT name FROM account a WHERE a.id = c.account_id) AS 'name',
           c.comment, 
           c.star,
