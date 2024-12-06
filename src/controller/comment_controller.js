@@ -28,7 +28,7 @@ module.exports = {
         }
       }
     } catch (err) {
-      res.status(500).send("Error");
+      res.status(500).send("Error vai lon");
     }
   },
 

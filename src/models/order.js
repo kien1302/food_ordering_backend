@@ -276,25 +276,6 @@ async function calculateProfitWithYear(store_id, year) {
   }
 }
 
-async function checkIfShippingStatus(order_id) {
-  const [result] = await sequelize.query(
-    `
-    UPDATE food_delivery.order
-    SET status = 'RCD'
-    WHERE id = :order_id AND status = 'SHP'
-    `,
-    {
-      type: QueryTypes.UPDATE,
-      replacements: {
-        order_id: order_id,
-      },
-    }
-  );
-  console.log("check affectedRows: ", result.affectedRows);
-  // Check if any rows were affected by the update
-  return result.affectedRows > 0;
-}
-
 async function getTotalProfitAndQuantityByStatus(store_id) {
   try {
     const data = await sequelize.query(
