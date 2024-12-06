@@ -18,6 +18,7 @@ router.post("/orders-seen-status-set", order.orderSeenStatusSet);
 router.post("/get-unseen-orders", order.getUnseenStatusOrder);
 
 router.post("/get-order-all-product-info", order.getOrderAllProductStore)
+router.route("/confirm-order-receive").patch(middleware(schemas.OrderId, PROPERTY_TYPE.query), order.confirmOrderReceive);
 //test
 router.route("/test").get(middleware(schemas.StoreProductOrdered, PROPERTY_TYPE.query), order.test);
 

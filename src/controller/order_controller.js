@@ -317,5 +317,21 @@ module.exports = {
       console.error(e)
       res.status(500).send(e)
     }
+  },
+
+  confirmOrderReceive: async function (req, res) {
+    try {
+      const order_id = req.body.order_id;
+      const statusCheck = await checkIfShippingStatus(order_id);
+      if (statusCheck) {
+        res.status(200).json({ message: "Changing status successfully!" })
+      } else {
+        res.status(404).send("not in status SHP!")
+      }
+    }
+    catch (e) {
+      console.log("check e: ", e)
+      res.status(500).send(err);
+    }
   }
 };
