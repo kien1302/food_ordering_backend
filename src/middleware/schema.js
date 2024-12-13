@@ -25,7 +25,13 @@ const store_type = Joi.string().required();
 const year = Joi.string().pattern(new RegExp("^[0-9]{4,4}$")).required();
 const month = Joi.string().pattern(new RegExp("^[0-9]{1,2}$")).required();
 
-const password = Joi.string().pattern(new RegExp("^[a-zA-Z0-9!@#$%^&*()+-]{8,100}$")).required().messages({'any.only': "Incorrect password"});
+const password = Joi.string()
+  .pattern(new RegExp("^[a-zA-Z0-9!@#$%^&*()+-]{8,100}$"))
+  .required()
+  .messages({
+    'string.pattern.base': "Incorrect password",
+    'any.required': "Password is required",
+  });
 const product_id = Joi.number().min(0).required();
 const product_array = Joi.array().min(0).required();
 const account_id = Joi.string().length(10).required();
